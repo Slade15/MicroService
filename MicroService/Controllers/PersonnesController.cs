@@ -28,14 +28,31 @@ namespace MicroService.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<GetPersonneDTO>>> GetPersonnesAsync([FromQuery] string? prenom = "", [FromQuery] string? nom = "")
         {
-            IEnumerable<PersonneModel> PersonnesList = await _repository.GetItemsAsync(prenom, nom);
+            //  IEnumerable<PersonneModel> fouldedPersonnes = await _repository.GetItemsAsync(prenom, nom); //filtre cote DB
 
-            if (PersonnesList is null || PersonnesList.Count() == 0)
+            IEnumerable<PersonneModel> fouldedPersonnes = await _repository.GetItemsAsync();  //filtre cote Control
+
+            if (fouldedPersonnes is null)
             {
                 return NotFound();
             }
 
-            var result = PersonnesList.Select(p => p.AsDto());
+            if (!string.IsNullOrWhiteSpace(prenom))
+            {
+                fouldedPersonnes = fouldedPersonnes.Where(p => p.Prenom.Contains(prenom, StringComparison.OrdinalIgnoreCase));
+            }
+            if (!string.IsNullOrWhiteSpace(nom))
+            {
+                fouldedPersonnes = fouldedPersonnes.Where(p => p.Nom.Contains(nom, StringComparison.OrdinalIgnoreCase));
+            }
+
+
+            if (fouldedPersonnes.Count() == 0)
+            {
+                return NotFound();
+            }
+
+            var result = fouldedPersonnes.Select(p => p.AsDto());
 
             return Ok(result);
         }

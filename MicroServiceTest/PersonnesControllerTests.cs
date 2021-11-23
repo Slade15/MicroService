@@ -73,6 +73,8 @@ namespace MicroServiceTest
 
             _repositoryStub.Setup(r => r.GetItemsAsync(It.IsAny<string>(), It.IsAny<string>()))
              .ReturnsAsync(expectedPersonnesArray);
+            _repositoryStub.Setup(r => r.GetItemsAsync())
+             .ReturnsAsync(expectedPersonnesArray);
 
             var controler = new PersonnesController(_repositoryStub.Object);
 

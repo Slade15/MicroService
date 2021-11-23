@@ -33,6 +33,17 @@ namespace MicroService.Repositories
         public async Task<IEnumerable<PersonneModel>> GetItemsAsync(string prenom, string nom)
         {
             IEnumerable<PersonneModel> result;
+
+           result = await GetItemsAsync();
+            if(!string.IsNullOrWhiteSpace(prenom))
+            {
+                result = result.Where(p => p.Prenom.Contains(prenom, StringComparison.OrdinalIgnoreCase));
+            }
+            if (!string.IsNullOrWhiteSpace(nom))
+            {
+                result = result.Where(p => p.Nom.Contains(nom, StringComparison.OrdinalIgnoreCase));
+            }
+            return result;
             ////pas utilisé CONTAINS car dit début et fin 
             //if (!string.IsNullOrEmpty(prenom) && string.IsNullOrEmpty(nom))
             //{
@@ -63,16 +74,6 @@ namespace MicroService.Repositories
             //         .ToListAsync();
             //}
 
-           result = await GetItemsAsync();
-            if(!string.IsNullOrWhiteSpace(prenom))
-            {
-                result = result.Where(p => p.Prenom.Contains(prenom, StringComparison.OrdinalIgnoreCase));
-            }
-            if (!string.IsNullOrWhiteSpace(nom))
-            {
-                result = result.Where(p => p.Nom.Contains(nom, StringComparison.OrdinalIgnoreCase));
-            }
-            return result;
         }
 
         public async Task UpdateItemAsync(PersonneModel item)
