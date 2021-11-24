@@ -26,7 +26,7 @@ namespace MicroServiceTest
             //Arange
 
             _repositoryStub.Setup(r => r.GetItemAsync(It.IsAny<Guid>()))
-             .ReturnsAsync((PersonneModel)null);
+             .ReturnsAsync((PersonneModel)null!);
 
             var controler = new PersonnesController(_repositoryStub.Object);
 
